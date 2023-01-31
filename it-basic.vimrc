@@ -96,6 +96,7 @@ call plug#begin('~/.vim/plugged')
 
   " 3. Terraform
   Plug 'hashivim/vim-terraform'
+  " Plug 'vim-scripts/icansee.vim'
 
   " 4. Commentary
 	Plug 'tpope/vim-commentary'
@@ -229,7 +230,7 @@ call plug#end()
   autocmd FileType yaml setlocal et ts=2 ai sw=2 nu sts=0
 
   "" 3. For TERRAFORM
-  autocmd BufEnter *.tf* colorscheme icansee
+  " autocmd BufEnter *.tf* colorscheme icansee
 
 	"" 4. For COMMENTARY
 	autocmd FileType py,tf,yaml,yml,sh setlocal commentstring=#\ %s 
