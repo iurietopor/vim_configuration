@@ -7,6 +7,7 @@
       vim_dir: "{{ ansible_env.HOME }}/.vim"
       vimrc: "{{ ansible_env.HOME }}/.vimrc"
       it_basic_vimrc: "{{ ansible_env.PWD }}/it-basic.vimrc"
+
     tasks: 
     - name: Install reguired packages
       apt:
@@ -84,22 +85,36 @@
         dest: "{{ ansible_env.PWD }}/personal.template"
         mode: '0644'
 
+      # dirname $(dirname $(dirname $(find "{{ vim_dir }}" -name "personal.templates")))
+      # dirname $(find "{{ vim_dir }}" -name "personal.templates") | xargs dirname | xargs dirname
+      # find {{ vim_dir }} -name "personal.*" | sed -n 's|/|\n|6g;P'
+      # find {{ vim_dir }} -name "*personal.*" | cut -d "/" -f -6
     - name: Find all `personal.templates` files 
       shell: |
-        dirname $(dirname $(dirname $(find "{{ vim_dir }}" -name "personal.templates")))
+        find {{ vim_dir }} -name 'personal.templates' -print0 |\
+        while IFS= read -r -d '' line; do
+          echo "${line%/*/*/*}"
+        done 
       args:
         executable: /bin/bash 
       register: find_result
 
     # - name: Print message "find_result"
     #   debug:
-    #     msg: "{{ find_result.stdout }}"
+    #     msg: "{{ find_result.stdout_lines }}"
 
     # - name: Remove original `personal.templates` 
     #   file:
     #     path: "{{ item }}"
     #     state: absent
     #   loop: "{{ find_result.stdout_lines }}"
+
+    - name: Be sure that 'templates' directory exist
+      file:
+        state: directory
+        path: "{{ item }}/templates"
+        mode: "0755"
+      loop: "{{ find_result.stdout_lines }}"
 
     - name: Ensure `personal.templates` in places (prefer to create links)
       file:

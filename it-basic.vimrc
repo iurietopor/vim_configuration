@@ -113,7 +113,7 @@ call plug#begin('~/.vim/plugged')
 	Plug 'preservim/vim-markdown' 
 
   " 7. BASH
-	" Plug 'WolfgangMehner/bash-support' 
+	Plug 'WolfgangMehner/bash-support' 
 
 call plug#end()
 
@@ -159,6 +159,7 @@ call plug#end()
 
   " 7. BASH
   " let g:Templates_UsePersonalizationFile = 'no' 
+	let g:Templates_PersonalizationFile = 'templates/personal.template*'
 
 " }}}
 
