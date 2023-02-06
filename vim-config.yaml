@@ -1,55 +1,112 @@
-- name: Config Vim with plugins
-  hosts: localhost
-  gather_facts: yes
-  become: no
-  vars: 
-    vim_dir: "{{ ansible_env.HOME }}/.vim"
-    vimrc: "{{ ansible_env.HOME }}/.vimrc"
-    it_basic_vimrc: "{{ ansible_env.PWD }}/it-basic.vimrc"
-  tasks: 
-  - name: Install reguired packages
-    apt:
-      pkg: 
-        - git
-        - build-essential
-        - cmake
-        - python3-dev
-      state: present
-      update_cache: yes
-    become: yes
+---
+  - name: Config Vim with plugins
+    hosts: localhost
+    gather_facts: yes
+    become: no
+    vars: 
+      vim_dir: "{{ ansible_env.HOME }}/.vim"
+      vimrc: "{{ ansible_env.HOME }}/.vimrc"
+      it_basic_vimrc: "{{ ansible_env.PWD }}/it-basic.vimrc"
+    tasks: 
+    - name: Install reguired packages
+      apt:
+        pkg: 
+          - git
+          - build-essential
+          - cmake
+          - python3-dev
+        state: present
+        update_cache: yes
+      become: yes
 
-  - name: Ensure .vim/{autoload, backup, colors, plugged} directory exists
-    file:
-      path: "{{ item }}"
-      state: directory
-      recurse: no
-      mode: 0750
-    loop:
-        - "{{ vim_dir }}"
-        - "{{ vim_dir }}/autoload"
-        - "{{ vim_dir }}/backup"
-        - "{{ vim_dir }}/colors"
-        - "{{ vim_dir }}/plugged"
+    - name: Ensure .vim/{autoload, backup, colors, plugged} directory exists
+      file:
+        path: "{{ item }}"
+        state: directory
+        recurse: no
+        mode: 0750
+      loop:
+          - "{{ vim_dir }}"
+          - "{{ vim_dir }}/autoload"
+          - "{{ vim_dir }}/backup"
+          - "{{ vim_dir }}/colors"
+          - "{{ vim_dir }}/plugged"
 
-  - name: Ensure Plug is in place
-    get_url:
-      dest: "{{ vim_dir }}/autoload/plug.vim"
-      url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    - name: Ensure Plug is in place
+      get_url:
+        dest: "{{ vim_dir }}/autoload/plug.vim"
+        url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-  - name: Ensure .vimrc config in place (prefer to create a link)
-    file:
-      src: "{{ it_basic_vimrc }}"
-      dest: "{{ vimrc }}"
-      state: link
-      mode: '0644'
+    - name: Ensure .vimrc config in place (prefer to create a link)
+      file:
+        src: "{{ it_basic_vimrc }}"
+        dest: "{{ vimrc }}"
+        state: link
+        mode: '0644'
 
-  - name: Install all Plugins from .vimrc using :PlugInstall
-    shell: vim +'PlugInstall --sync' +qa
-    args:
-      executable: /bin/bash
+    - name: Install all Plugins from .vimrc using :PlugInstall
+      shell: vim +'PlugInstall --sync' +qa
+      args:
+        executable: /bin/bash
 
-  - name: Compile YCM server (by running a py script)
-    shell: python3 "{{ vim_dir }}/plugged/YouCompleteMe/install.py"
-    args:
-      executable: /bin/bash
+    - name: Compile YCM server (by running a py script)
+      shell: python3 "{{ vim_dir }}/plugged/YouCompleteMe/install.py"
+      args:
+        executable: /bin/bash
 
+      # Configure `personal.templates`
+    - name: Extract "extracted_name" variable from {{ email }}
+      shell: |
+        echo "{{ email }}" | cut -d "@" -f1 | sed -r 's/\./ /g' | sed -e "s/\b\(.\)/\u\1/g"
+      args:
+        executable: /bin/bash 
+      register: name
+
+    - name: Extract "author_ref" variable from {{ extracted_name }}
+      shell: |
+        printf "%c" {{ name.stdout }} && echo
+      args:
+        executable: /bin/bash
+      register: ref
+
+    # - name: Display `ref`
+    #   debug:
+    #     msg: "{{ name.stdout }}, {{ ref.stdout }}"
+
+    - name: Set "extracted_name", "author_ref" as facts
+      set_fact:
+        extracted_name: "{{ name.stdout }}"
+        author_ref: "{{ ref.stdout }}"
+
+    - name: Create `personal.templates` from J2 template
+      template:
+        src: "{{ ansible_env.PWD }}/it-bash-personal-template.j2"
+        dest: "{{ ansible_env.PWD }}/personal.template"
+        mode: '0644'
+
+    - name: Find all `personal.templates` files 
+      shell: |
+        dirname $(dirname $(dirname $(find "{{ vim_dir }}" -name "personal.templates")))
+      args:
+        executable: /bin/bash 
+      register: find_result
+
+    # - name: Print message "find_result"
+    #   debug:
+    #     msg: "{{ find_result.stdout }}"
+
+    # - name: Remove original `personal.templates` 
+    #   file:
+    #     path: "{{ item }}"
+    #     state: absent
+    #   loop: "{{ find_result.stdout_lines }}"
+
+    - name: Ensure `personal.templates` in places (prefer to create links)
+      file:
+        src: "{{ ansible_env.PWD }}/personal.template"
+        dest: "{{ item }}/templates/personal.templates"
+        state: link
+        mode: '0644'
+      loop: "{{ find_result.stdout_lines }}"
+
+# ```

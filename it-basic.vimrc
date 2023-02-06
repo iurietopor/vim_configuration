@@ -11,6 +11,9 @@ set nocompatible
 " Enable type file detection. Vim will be able to try to detect the type of file in use.
 filetype on
 
+" Enable loading of plug-in files
+filetype plugin on
+
 " Load an indent file for the detected file type.
 filetype indent on
 
@@ -106,8 +109,11 @@ call plug#begin('~/.vim/plugged')
 	Plug 'vim-airline/vim-airline-themes' " the official theme repository for vim-airline
 	
 	" 6. Markdown
-	Plug 'goodlygeek/tabular' " auto-line up text
+	Plug 'godlygeek/tabular' " auto-line up text
 	Plug 'preservim/vim-markdown' 
+
+  " 7. BASH
+	" Plug 'WolfgangMehner/bash-support' 
 
 call plug#end()
 
@@ -151,6 +157,9 @@ call plug#end()
 	let g:vim_markdown_toc_autofit = 1
 	let g:vim_markdown_new_list_item_indent = 0
 
+  " 7. BASH
+  " let g:Templates_UsePersonalizationFile = 'no' 
+
 " }}}
 
 " MAPPINGS --------------------------------------------------------------- {{{
@@ -189,9 +198,16 @@ call plug#end()
 		noremap <c-left> <c-w>>
 		noremap <c-right> <c-w><
 		
-		" Unhighlitght prevois serch
-		nnoremap ## :nohighlight	
+		" Unhighlitght prevois serch (nohighlight)
+		nnoremap ## :noh<CR>
 		
+		" Delete whole word like <C-w> but in oposite direction
+		inoremap <C-b> <C-o>dw
+		" Delete all, from right of cursore to end of line 
+		" (like <C-u> but oposite direction)
+		" inoremap <S-Delete> <C-o>d$ - not work (use manual <C-o>D)
+
+
 	" }}}
 
 
@@ -206,6 +222,8 @@ call plug#end()
 
 	" }}}
   
+
+
 " }}}
 
 
@@ -217,6 +235,7 @@ call plug#end()
 	  autocmd!
 	  autocmd FileType vim setlocal foldmethod=marker
   augroup END
+
 
   " If the current file type is HTML, set indentation to 2 spaces.
   autocmd Filetype html setlocal tabstop=2 shiftwidth=2 expandtab
@@ -234,6 +253,11 @@ call plug#end()
 
   "" 3. For TERRAFORM
   " autocmd BufEnter *.tf* colorscheme icansee
+  augroup ft_terraform
+		autocmd!
+		autocmd FileType terraform inoremap - <Esc>a_
+		autocmd FileType terraform inoremap _ <Esc>a-
+	augroup END
 
 	"" 4. For COMMENTARY
 	autocmd FileType py,tf,yaml,yml,sh setlocal commentstring=#\ %s 
