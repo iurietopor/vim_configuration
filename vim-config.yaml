@@ -16,6 +16,7 @@
           - build-essential
           - cmake
           - python3-dev
+          - shellcheck
         state: present
         update_cache: yes
       become: yes
