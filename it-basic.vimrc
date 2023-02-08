@@ -83,14 +83,15 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 
 call plug#begin('~/.vim/plugged')
 
-	" BASICS
-	"
+  " BASICS
+  "
   Plug 'dense-analysis/ale' " syntax checking and semantic errors
 
   Plug 'preservim/nerdtree' " file system explorer for the Vim editor
- 	
+   
+  Plug 'kshenoy/vim-signature' " plugin to place, toggle and display marks
 
-	" CUSTUM	
+  " CUSTUM  
   " 1. YouCompleteMe
   Plug 'Valloric/YouCompleteMe'
 
@@ -102,24 +103,31 @@ call plug#begin('~/.vim/plugged')
   " Plug 'vim-scripts/icansee.vim'
 
   " 4. Commentary
-	Plug 'tpope/vim-commentary'
+  Plug 'tpope/vim-commentary'
 
-	" 5. Vim-Airline
-	Plug 'vim-airline/vim-airline' " Lean & mean status/tabline for vim
-	Plug 'vim-airline/vim-airline-themes' " the official theme repository for vim-airline
-	
-	" 6. Markdown
-	Plug 'godlygeek/tabular' " auto-line up text
-	Plug 'preservim/vim-markdown' 
+  " 5. Vim-Airline
+  Plug 'vim-airline/vim-airline' " Lean & mean status/tabline for vim
+  Plug 'vim-airline/vim-airline-themes' " the official theme repository for vim-airline
+  
+  " 6. Markdown
+  Plug 'godlygeek/tabular' " auto-line up text
+  Plug 'preservim/vim-markdown' 
 
   " 7. BASH
-	Plug 'WolfgangMehner/bash-support' 
+  Plug 'WolfgangMehner/bash-support' 
+  Plug 'itspriddle/vim-shellcheck'
 
 call plug#end()
 
 " }}}
 
 " PLUGIN'S config ---------------------------------------------------------------- {{{
+
+  " *. vim-signature
+  highlight SignatureMarkText ctermfg=green
+  "" guifg=White 
+  highlight SignColumn ctermbg=none
+  "guibg=#002b36
 
   " 1. YouCompleteMe
   let g:ycm_global_ycm_extra_conf='~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py'
@@ -143,110 +151,113 @@ call plug#end()
   let g:terraform_align=1
 
   " 4.
-	
-	" 5.1 VIM-AIRLINE 
-	let g:airline#extensions#tabline#enabled = 1
-	let g:airline#extensions#tabline#left_sep = ' '
-	let g:airline#extensions#tabline#left_alt_sep = '|'
-	" let g:airline#extensions#tabline#formatter = 'default'
-	" 5.2 VIM-AIRLINE-THEME
-	let g:airline_theme='simple'
+  
+  " 5.1 VIM-AIRLINE 
+  let g:airline#extensions#tabline#enabled = 1
+  let g:airline#extensions#tabline#left_sep = ' '
+  let g:airline#extensions#tabline#left_alt_sep = '|'
+  " let g:airline#extensions#tabline#formatter = 'default'
+  " 5.2 VIM-AIRLINE-THEME
+  let g:airline_theme='simple'
 
-	" 6 MARKDOWN
-	let g:vim_markdown_folding_disabled = 1
-	let g:vim_markdown_toc_autofit = 1
-	let g:vim_markdown_new_list_item_indent = 0
+  " 6 MARKDOWN
+  let g:vim_markdown_folding_disabled = 1
+  let g:vim_markdown_toc_autofit = 1
+  let g:vim_markdown_new_list_item_indent = 0
 
   " 7. BASH
   " let g:Templates_UsePersonalizationFile = 'no' 
-	let g:Templates_PersonalizationFile = 'templates/personal.template*'
+  let g:Templates_PersonalizationFile = 'templates/personal.template*'
 
 " }}}
 
 " MAPPINGS --------------------------------------------------------------- {{{
 
-	" MAPPINGS Basic -------------------------------------------------------- {{{
-	
-		" nnoremap – Allows you to map keys in normal mode.
-		" inoremap – Allows you to map keys in insert mode.
-		" vnoremap – Allows you to map keys in visual mode.
-	 
-		inoremap jj <esc>
-		
-		nnoremap <space> :
-		nnoremap o o<esc>
-		nnoremap O O<esc>
+  " MAPPINGS Basic -------------------------------------------------------- {{{
+  
+    " nnoremap – Allows you to map keys in normal mode.
+    " inoremap – Allows you to map keys in insert mode.
+    " vnoremap – Allows you to map keys in visual mode.
+   
+    inoremap jj <esc>
+    
+    nnoremap <space> :
+    nnoremap o o<esc>
+    nnoremap O O<esc>
 
-		" Map the F5 key to run a Python script inside Vim.
-		" I map F5 to a chain of commands here.
-		" :w saves the file.
-		" <CR> (carriage return) is like pressing the enter key.
-		" !clear runs the external clear screen command.
-		" !python3 % executes the current file with Python.
-		"nnoremap <f5> :w <CR>:!clear <CR>:!python3 % <CR>  
+    " Map the F5 key to run a Python script inside Vim.
+    " I map F5 to a chain of commands here.
+    " :w saves the file.
+    " <CR> (carriage return) is like pressing the enter key.
+    " !clear runs the external clear screen command.
+    " !python3 % executes the current file with Python.
+    "nnoremap <f5> :w <CR>:!clear <CR>:!python3 % <CR>  
 
-		" You can split the window in Vim by typing :split or :vsplit.
-		" Navigate the split view easier by pressing CTRL+j, CTRL+k, CTRL+h, or CTRL+l.
-		nnoremap <c-j> <c-w>j
-		nnoremap <c-k> <c-w>k
-		nnoremap <c-h> <c-w>h
-		nnoremap <c-l> <c-w>l
+    " You can split the window in Vim by typing :split or :vsplit.
+    " Navigate the split view easier by pressing CTRL+j, CTRL+k, CTRL+h, or CTRL+l.
+    nnoremap <c-j> <c-w>j
+    nnoremap <c-k> <c-w>k
+    nnoremap <c-h> <c-w>h
+    nnoremap <c-l> <c-w>l
 
-		" Resize split windows using arrow keys by pressing:
-		" CTRL+UP, CTRL+DOWN, CTRL+LEFT, or CTRL+RIGHT.
-		noremap <c-up> <c-w>+
-		noremap <c-down> <c-w>-
-		noremap <c-left> <c-w>>
-		noremap <c-right> <c-w><
-		
-		" Unhighlitght prevois serch (nohighlight)
-		nnoremap ## :noh<CR>
-		
-		" Delete whole word like <C-w> but in oposite direction
-		inoremap <C-b> <C-o>dw
-		" Delete all, from right of cursore to end of line 
-		" (like <C-u> but oposite direction)
-		" inoremap <S-Delete> <C-o>d$ - not work (use manual <C-o>D)
+    " Resize split windows using arrow keys by pressing:
+    " CTRL+UP, CTRL+DOWN, CTRL+LEFT, or CTRL+RIGHT.
+    noremap <c-up> <c-w>+
+    noremap <c-down> <c-w>-
+    noremap <c-left> <c-w>>
+    noremap <c-right> <c-w><
+    
+    " Unhighlitght prevois serch (nohighlight)
+    nnoremap ## :noh<CR>
+    
+    " Delete whole word like <C-w> but in oposite direction
+    inoremap <C-b> <C-o>dw
+    " Delete all, from right of cursore to end of line 
+    " (like <C-u> but oposite direction)
+    " inoremap <S-Delete> <C-o>d$ - not work (use manual <C-o>D)
+
+    " enter in VisualBlockMode
+    nnoremap ` <c-v> 
+
+  " }}}
 
 
-	" }}}
+  " " NERDTree {{{
 
+    " NERDTree specific mappings.
+    " Map the F3 key to toggle NERDTree open and close.
+    nnoremap <F3> :NERDTreeToggle<cr>
 
-	" " NERDTree {{{
+    " Have nerdtree ignore certain files and directories.
+    let NERDTreeIgnore=['\.git$', '\.jpg$', '\.mp4$', '\.ogg$', '\.iso$', '\.pdf$', '\.pyc$', '\.odt$', '\.png$', '\.gif$', '\.db$']
 
-		" NERDTree specific mappings.
-		" Map the F3 key to toggle NERDTree open and close.
-		nnoremap <F3> :NERDTreeToggle<cr>
-
-		" Have nerdtree ignore certain files and directories.
-		let NERDTreeIgnore=['\.git$', '\.jpg$', '\.mp4$', '\.ogg$', '\.iso$', '\.pdf$', '\.pyc$', '\.odt$', '\.png$', '\.gif$', '\.db$']
-
-	" }}}
+  " }}}
   
 
 
 " }}}
-
 
 " VIMSCRIPT -------------------------------------------------------------- {{{
 
   " This will enable code folding.
   " Use the marker method of folding.
   augroup filetype_vim
-	  autocmd!
-	  autocmd FileType vim setlocal foldmethod=marker
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+    autocmd FileType vim setlocal expandtab
+    autocmd FileType vim highlight Folded ctermbg=none ctermfg=green
   augroup END
 
 
   " If the current file type is HTML, set indentation to 2 spaces.
-  autocmd Filetype html setlocal tabstop=2 shiftwidth=2 expandtab
+  autocmd FileType html setlocal tabstop=2 shiftwidth=2 expandtab
 
   " If Vim version is equal to or greater than 7.3 enable undofile.
   " This allows you to undo changes to a file even after saving it.
   if version >= 703
-	  set undodir=~/.vim/backup
-	  set undofile
-	  set undoreload=10000
+    set undodir=~/.vim/backup
+    set undofile
+    set undoreload=10000
   endif
 
   "" 2. For ANSIBLE
@@ -255,16 +266,24 @@ call plug#end()
   "" 3. For TERRAFORM
   " autocmd BufEnter *.tf* colorscheme icansee
   augroup ft_terraform
-		autocmd!
-		autocmd FileType terraform inoremap - <Esc>a_
-		autocmd FileType terraform inoremap _ <Esc>a-
-	augroup END
+    autocmd!
+    autocmd FileType terraform inoremap - <Esc>a_
+    autocmd FileType terraform inoremap _ <Esc>a-
+  augroup END
 
-	"" 4. For COMMENTARY
-	autocmd FileType py,tf,yaml,yml,sh setlocal commentstring=#\ %s 
+  "" 4. For COMMENTARY
+  autocmd FileType py,tf,yaml,yml,sh setlocal commentstring=#\ %s 
+
+  "" 7. For BASH
+  augroup sh_files
+    autocmd!
+    autocmd FileType sh setlocal foldmethod=indent
+    autocmd FileType sh setlocal foldnestmax=2
+    autocmd FileType sh setlocal nofoldenable
+    autocmd FileType sh highlight Folded ctermbg=none ctermfg=green
+  augroup END
 
 " }}}
-
 
 " STATUS LINE ------------------------------------------------------------ {{{
 
