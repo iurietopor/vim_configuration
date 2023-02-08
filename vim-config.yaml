@@ -92,7 +92,7 @@
       # find {{ vim_dir }} -name "*personal.*" | cut -d "/" -f -6
     - name: Find all `personal.templates` files 
       shell: |
-        find {{ vim_dir }} -name 'personal.templates' -print0 |\
+        find {{ vim_dir }} -type f -name 'personal.templates' -print0 |\
         while IFS= read -r -d '' line; do
           echo "${line%/*/*/*}"
         done 
