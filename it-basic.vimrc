@@ -23,10 +23,10 @@ syntax on
 " Add numbers to each line on the left-hand side.
 set number
 
-" Set shift width to 4 spaces.
+" Set shift width to 2 spaces.
 set shiftwidth=2
 
-" Set tab width to 4 columns.
+" Set tab width to 2 columns.
 set tabstop=2
 
 " Use space characters instead of tabs.
@@ -170,6 +170,18 @@ call plug#end()
   let g:Templates_PersonalizationFile = 'templates/personal.template*'
 
 " }}}
+
+" MACROS --------------------------------------------------------------- {{{
+
+  " Open as normal user, save as root user
+  let @w=':w !sudo tee %^'
+  " Convert all spaces to tabs
+  let @t=':set noexpandtab:retab!:w^'
+  " Convert all tabs to spaces
+  let @s=':set expandtab:retab:w^'
+  " 
+
+" }}} 
 
 " MAPPINGS --------------------------------------------------------------- {{{
 
