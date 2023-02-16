@@ -307,7 +307,7 @@ autocmd FileType html setlocal tabstop=2 shiftwidth=2 expandtab
 if version >= 703
   set undodir=~/.vim/backup
   set undofile
-  set undoreload=10000
+  set undoreload=1000
 endif
 
 "" 2. For ANSIBLE
@@ -323,6 +323,12 @@ augroup END
 
 "" 4. For COMMENTARY
 autocmd FileType py,tf,yaml,yml,sh setlocal commentstring=#\ %s 
+
+"" 6 MARKDOWN
+augroup md_files
+  autocmd!
+  autocmd FileType markdown setlocal ts=4 et sw=4
+augroup END
 
 "" 7. For BASH
 augroup sh_files
