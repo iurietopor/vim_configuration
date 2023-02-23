@@ -172,6 +172,7 @@ let g:ansible_ftdetect_filename_regex = '\v(playbook|site|main|local|requirement
 " 3. Terraform
 let g:terraform_fmt_on_save=1
 let g:terraform_align=1
+let g:terraform_fold_sections=1
 
 " 4.
 
@@ -205,7 +206,7 @@ set background=dark
 let g:everforest_background = 'soft'
 " For better performance
 let g:everforest_better_performance = 1
-colorscheme everforest
+silent! colorscheme everforest
 
 " }}}
 
