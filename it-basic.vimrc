@@ -80,6 +80,9 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 " Preserve indentation when you paste code
 set pastetoggle=<F2>
 
+" Allow to save to clipboard
+set clipboard=unnamed
+
 " Show spelling mistakes
 " set spell
 

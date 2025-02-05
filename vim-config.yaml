@@ -17,6 +17,7 @@
           - cmake
           - python3-dev
           - shellcheck
+          - vim
         state: present
         update_cache: yes
       become: yes
